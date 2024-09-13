@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:moviezilla/constant/constant.dart';
 import 'package:moviezilla/model/movie_model.dart';
 import 'package:moviezilla/model/tv_model.dart';
 import 'package:moviezilla/utlis/colors.dart';
+import 'package:moviezilla/views/tv/components/tv_details.dart';
 
 class TvCarosul extends StatelessWidget {
   final List <TvModel> tvlist;
@@ -15,14 +17,19 @@ class TvCarosul extends StatelessWidget {
     final sizeHeight=MediaQuery.sizeOf(context).height;
     return CarouselSlider.builder(itemCount: tvlist.length,
         itemBuilder: (context, index, realIndex) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(sizeHeight*.015),
-            child: CachedNetworkImage(
-              width: double.infinity,
-              fit: BoxFit.fill,
-              imageUrl:KmovieDbImageUrl+tvlist[index].posterPath.toString() ,
-              placeholder: (context, url) => Center(child: CircularProgressIndicator(color: AppColors.primaryColor,)),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+          return InkWell(
+            onTap: () {
+              Get.to(TvDetails(tvModel: tvlist[index]));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(sizeHeight*.015),
+              child: CachedNetworkImage(
+                width: double.infinity,
+                fit: BoxFit.fill,
+                imageUrl:KmovieDbImageUrl+tvlist[index].posterPath.toString() ,
+                placeholder: (context, url) => Center(child: CircularProgressIndicator(color: AppColors.primaryColor,)),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
           );
         }, options: CarouselOptions(

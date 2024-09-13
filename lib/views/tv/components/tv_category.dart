@@ -6,13 +6,14 @@ import 'package:moviezilla/views/tv/components/tv_list_item.dart';
 
 class TvCategory extends StatelessWidget {
   final TvType tvType;
-  TvCategory({super.key, required this.tvType});
+  final int? tvID;
+  TvCategory({super.key, required this.tvType, this.tvID});
 
   ApiService apiService=ApiService();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: apiService.getTvData(tvType), builder: (context, snapshot) {
+    return FutureBuilder(future: apiService.getTvData(tvType,tvId: tvID), builder: (context, snapshot) {
       if(snapshot.hasData){
         List<TvModel> tvList=snapshot.data ?? [];
         return ListView.builder(

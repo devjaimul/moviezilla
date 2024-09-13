@@ -40,7 +40,7 @@ dependencies:
   cached_network_image:
   flutter_rating_bar:
   get:
-  youtube_player_iframe: ^5.1.5
+  youtube_player_iframe: ^2.2.2
 
 
 dev_dependencies:

@@ -7,7 +7,10 @@ const Kpopular="popular";
 const KNowPlaying="now_playing";
 const KTopRated="top_rated";
 const KUpComing="upcoming";
+
 const KVideos="/videos";
+const KSimilar="/similar";
+const KCredits="/credits";
 
 
 

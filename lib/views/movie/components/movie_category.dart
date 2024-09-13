@@ -6,13 +6,14 @@ import 'package:moviezilla/views/movie/components/movie_list_item.dart';
 
 class MovieCategory extends StatelessWidget {
   final MovieType movieType;
-   MovieCategory({super.key, required this.movieType});
+  final int? movieID;
+   MovieCategory({super.key, required this.movieType, this.movieID});
 
   ApiService apiService=ApiService();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: apiService.getMovieData(movieType), builder: (context, snapshot) {
+    return FutureBuilder(future: apiService.getMovieData(movieType,movieId: movieID), builder: (context, snapshot) {
       if(snapshot.hasData){
         List<MovieModel> movieList=snapshot.data ?? [];
         return ListView.builder(

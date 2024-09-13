@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moviezilla/views/navBar/navbar.dart';
+import 'package:moviezilla/views/splash%20%20screen/spalsh_screen.dart';
 
 
 
@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(backgroundColor: Colors.black45),
         appBarTheme: const AppBarTheme(centerTitle: true,backgroundColor: Colors.transparent),
-        iconButtonTheme: IconButtonThemeData(style: ButtonStyle(iconColor: WidgetStatePropertyAll(Colors.white)))
+        iconButtonTheme: const IconButtonThemeData(style: ButtonStyle(iconColor: WidgetStatePropertyAll(Colors.white)))
       ),
-      home: const CustomNavbar()
+      home: const SplashScreen()
     );
   }
 }

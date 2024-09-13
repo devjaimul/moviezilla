@@ -31,7 +31,7 @@ class MovieListItem extends StatelessWidget {
                 fit: BoxFit.cover,
                 imageUrl:KmovieDbImageUrl+movieModel.posterPath.toString(),
                 placeholder: (context, url) => Center(child: CircularProgressIndicator(color: AppColors.primaryColor,)),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) =>  Ink.image(image: const NetworkImage('https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_1280.png')),
               ),
             ),
             SizedBox(height: Get.height*0.01,),

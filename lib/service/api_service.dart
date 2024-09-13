@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:moviezilla/constant/constant.dart';
+import 'package:moviezilla/model/cast_model.dart';
 import 'package:moviezilla/model/movie_model.dart';
 
 import '../model/tv_model.dart';
 import '../model/video_model.dart';
 
-enum MovieType{ nowPlaying,popular,topRated,upcoming }
-enum TvType{airing_today,on_the_air,popular,top_rated}
+enum MovieType{ nowPlaying,popular,topRated,upcoming,similar }
+enum TvType{airing_today,on_the_air,popular,top_rated,similar}
 enum ProgramType{tv,movie}
 
 class ApiService{
-Future<List<MovieModel>> getMovieData(MovieType type) async{
+Future<List<MovieModel>> getMovieData(MovieType type,{int? movieId}) async{
   String url='';
 
   if(type==MovieType.nowPlaying){
@@ -26,6 +27,9 @@ Future<List<MovieModel>> getMovieData(MovieType type) async{
   }
   else if (type==MovieType.upcoming){
     url=KmovieDbUrl+KUpComing;
+  }
+  else if (type==MovieType.similar){
+    url=KmovieDbUrl+movieId.toString()+KSimilar;
   }
 
   try{
@@ -46,7 +50,7 @@ Future<List<MovieModel>> getMovieData(MovieType type) async{
   }
 }
 
-Future<List<TvModel>> getTvData(TvType type) async{
+Future<List<TvModel>> getTvData(TvType type,{int? tvId}) async{
   String url='';
 
   if(type==TvType.popular){
@@ -61,6 +65,10 @@ Future<List<TvModel>> getTvData(TvType type) async{
   else if (type==TvType.top_rated){
     url=KTvDbUrl+KTopRated;
   }
+  else if (type==TvType.similar){
+    url=KTvDbUrl+tvId.toString()+KSimilar;
+  }
+
 
   try{
     Response response=await get(Uri.parse(url+"?api_key=3bb8d1f9a3cee1f06791301a9930bc5f"));
@@ -84,7 +92,7 @@ Future<List<VideoModel>> getVideos(int id,ProgramType type) async{
   String url='';
 
   if(type==ProgramType.movie){
-    url=KmovieDbImageUrl+id.toString()+KVideos;
+    url=KmovieDbUrl+id.toString()+KVideos;
   }
   else if (type==ProgramType.tv){
     url=KTvDbUrl+id.toString()+KVideos;
@@ -98,6 +106,34 @@ Future<List<VideoModel>> getVideos(int id,ProgramType type) async{
       List<dynamic> body=json['results'];   //j array ar list dekhabe tar nam ki
       List<VideoModel> VideoList=body.map((item) => VideoModel.fromJson(item),).toList();  //map theke item ber korse
       return VideoList;  //upore create kora list ta return kore dibo
+    }
+    else{
+      throw('Nothing Found');
+    }
+  }
+  catch(e){
+    throw e.toString();
+  }
+}
+
+Future<List<CastModel>> getCast(int id,ProgramType type) async{
+  String url='';
+
+  if(type==ProgramType.movie){
+    url=KmovieDbUrl+id.toString()+KCredits;
+  }
+  else if (type==ProgramType.tv){
+    url=KTvDbUrl+id.toString()+KCredits;
+  }
+
+  try{
+    Response response=await get(Uri.parse(url+"?api_key=3bb8d1f9a3cee1f06791301a9930bc5f"));
+
+    if(response.statusCode==200){
+      Map<String,dynamic> json=jsonDecode(response.body);
+      List<dynamic> body=json['cast'];   //j array ar list dekhabe tar nam ki
+      List<CastModel> CastList=body.map((item) => CastModel.fromJson(item),).toList();  //map theke item ber korse
+      return CastList;  //upore create kora list ta return kore dibo
     }
     else{
       throw('Nothing Found');

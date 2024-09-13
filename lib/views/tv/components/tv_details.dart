@@ -3,26 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:moviezilla/global%20widgets/cast_page.dart';
-import 'package:moviezilla/model/movie_model.dart';
+import 'package:moviezilla/model/tv_model.dart';
 import 'package:moviezilla/service/api_service.dart';
 import 'package:moviezilla/utlis/text_style.dart';
+import 'package:moviezilla/views/tv/components/tv_category.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 
 import '../../../constant/constant.dart';
 import '../../../model/video_model.dart';
 import '../../../utlis/colors.dart';
-import 'movie_category.dart';
 
-class MovieDetails extends StatefulWidget {
-  final MovieModel movieModel;
-  const MovieDetails({super.key, required this.movieModel});
+
+class TvDetails extends StatefulWidget {
+  final TvModel tvModel;
+  const TvDetails({super.key, required this.tvModel, });
 
   @override
-  State<MovieDetails> createState() => _MovieDetailsState();
+  State<TvDetails> createState() => _TvDetailsState();
 }
 
-class _MovieDetailsState extends State<MovieDetails> {
+class _TvDetailsState extends State<TvDetails> {
   bool _isVideoPlaying = false;
   YoutubePlayerController? _controller;
   @override
@@ -32,7 +33,7 @@ class _MovieDetailsState extends State<MovieDetails> {
     return Scaffold(
       appBar: AppBar(
         title: HeadingTwo(
-          data: widget.movieModel.title.toString(),
+          data: widget.tvModel.originalName.toString(),
           fontSize: Get.height * .023,
         ),
       ),
@@ -51,7 +52,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                       child: CachedNetworkImage(
                         height: Get.height * .25,
                         fit: BoxFit.cover,
-                        imageUrl: KmovieDbImageUrl + widget.movieModel.backdropPath.toString(),
+                        imageUrl: KmovieDbImageUrl + widget.tvModel.backdropPath.toString(),
                         placeholder: (context, url) => Center(
                           child: CircularProgressIndicator(
                             color: AppColors.primaryColor,
@@ -62,7 +63,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                     ),
                   ),
                   FutureBuilder(
-                    future: apiService.getVideos(widget.movieModel.id!, ProgramType.movie),
+                    future: apiService.getVideos(widget.tvModel.id!, ProgramType.tv),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<VideoModel> videos = snapshot.data ?? [];
@@ -81,7 +82,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                                   );
                                 });
                               },
-                              icon: Icon(Icons.play_circle,),
+                              icon: const Icon(Icons.play_circle,),
                               style: IconButton.styleFrom(
                                 backgroundColor: AppColors.primaryColor,
                               ),
@@ -89,12 +90,12 @@ class _MovieDetailsState extends State<MovieDetails> {
                           );
                         }
                       }
-                      return SizedBox();
+                      return const SizedBox();
                     },
                   ),
                   _isVideoPlaying
                       ? YoutubePlayerIFrame(controller: _controller!)
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
               SizedBox(
@@ -103,7 +104,7 @@ class _MovieDetailsState extends State<MovieDetails> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HeadingTwo(data: widget.movieModel.title.toString()),
+                  HeadingTwo(data: widget.tvModel.originalName.toString()),
                   SizedBox(
                     height: Get.height * .001,
                   ),
@@ -114,7 +115,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                         itemCount: 5,
                         itemSize: Get.height * 0.015,
                         direction: Axis.horizontal,
-                        rating: widget.movieModel.voteAverage ?? 0,
+                        rating: widget.tvModel.voteAverage ?? 0,
                         itemBuilder: (context, index) {
                           return const Icon(
                             Icons.star,
@@ -124,32 +125,32 @@ class _MovieDetailsState extends State<MovieDetails> {
                       ),
                       SizedBox(width: Get.width*.03,),
                       HeadingThree(
-                          data: widget.movieModel.voteAverage == null
+                          data: widget.tvModel.voteAverage == null
                               ? ""
-                              : widget.movieModel.voteAverage.toString()),
-                      Spacer(),
+                              : widget.tvModel.voteAverage.toString()),
+                      const Spacer(),
                       HeadingThree(
-                          data: widget.movieModel.releaseDate == null
+                          data: widget.tvModel.firstAirDate == null
                               ? ""
-                              :"Realsed : ${widget.movieModel.releaseDate}"),
+                              :"Realsed : ${widget.tvModel.firstAirDate}"),
                     ],
                   ),
                   SizedBox(
                     height: Get.height * .01,
                   ),
                   HeadingFour(
-                      data: widget.movieModel.overview == null
+                      data: widget.tvModel.overview == null
                           ? ""
-                          : widget.movieModel.overview.toString()),
+                          : widget.tvModel.overview.toString()),
                   SizedBox(height: Get.height*.012,),
                   const HeadingTwo(data: 'Cast'),
                   SizedBox(height: Get.height*.012,),
-                  SizedBox(height:Get.height*0.15 ,child: CastPage(programType: ProgramType.movie, id: widget.movieModel.id!)),
+                  SizedBox(height:Get.height*0.15 ,child: CastPage(programType: ProgramType.tv, id: widget.tvModel.id!)),
                   SizedBox(height: Get.height*.012,),
-                  const HeadingTwo(data: 'Similar Movie'),
+                  const HeadingTwo(data: 'Similar Program'),
                   SizedBox(height: Get.height*.012,),
                   SizedBox(
-                      height:Get.height*.23,child: MovieCategory(movieType: MovieType.similar,movieID: widget.movieModel.id,)),
+                      height:Get.height*.23,child: TvCategory(tvType: TvType.similar,tvID: widget.tvModel.id,)),
                 ],
               ),
             ],
